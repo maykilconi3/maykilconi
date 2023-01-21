@@ -1,0 +1,141 @@
+<?php
+
+ini_set("display_errors", 1);
+error_reporting(E_ALL);
+
+include "../server/security/encrypt.php";
+include "../server/baglan.php";
+
+$krolid = $_SESSION["id"];
+$krolresult = $conn->query("SELECT * FROM sh_kullanici WHERE id='$krolid'");
+if ($krolresult->num_rows < 1) {
+    header("Location: /logout");
+    exit;
+}
+$krolarray = mysqli_fetch_array($krolresult);
+$k_rol = $krolarray["k_rol"];
+$checkID = $krolarray["id"];
+
+?>
+<div class="page-container">
+    <div class="page-sidebar">
+        <img alt="image" src="/assets/icon/SkyCheck.svg" class="SkyChecklogo">
+        <ul class="list-unstyled accordion-menu">
+            <li <?php if ($page_title == 'Panel') {
+                    echo 'class="active-page"';
+                } ?>>
+                <a href="/panel"><i data-feather="home"></i>Anasayfa</a>
+            </li>
+            <li <?php
+                if (
+                    $page_title === "BluTV" ||
+                    $page_title === "Discord Token"
+                ) {
+                    echo 'class="open"';
+                }
+                ?>>
+                <a <?php
+                    if (
+                        $page_title === "BluTV" ||
+                        $page_title === "Discord Token"
+                    ) {
+                        echo 'style="color: white;"';
+                    }
+                    ?> href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>Acc. Checker<i class="fas fa-chevron-right dropdown-icon"></i></a>
+                <ul>
+                    <li><a <?php if ($page_title === "BluTV") echo 'style="color: #83d8ae !important;"' ?> href="/blutv"><i class="far fa-circle"></i>BluTV Check</a></li>
+                    <li><a <?php if ($page_title === "Discord Token") echo 'style="color: #83d8ae !important;"' ?> href="/token"><i class="far fa-circle"></i>DC Token Check</a></li>
+                </ul>
+            </li>
+            <li <?php
+                if (
+                    $page_title === "Facebook" ||
+                    $page_title === "Mernis 2022" ||
+                    $page_title === "Mernis 2015" ||
+                    $page_title === "TC GSM" || 
+                    $page_title === "GSM TC" ||
+                    $page_title === "TC Adres" ||
+                    $page_title === "A.Ö.L Sorgu" ||
+					$page_title === "Ad Soyad" ||
+                    $page_title === "TC Okul" ||
+                    $page_title === "TC İşyeri"
+                ) {
+                    echo 'class="open"';
+                }
+                ?>>
+                <a <?php
+                    if (
+                        $page_title === "Facebook" ||
+                        $page_title === "Mernis 2022" ||
+                        $page_title === "Mernis 2015" ||
+                        $page_title === "TC GSM" || 
+                        $page_title === "GSM TC" ||
+                        $page_title === "TC Adres" ||
+						$page_title === "A.Ö.L Sorgu" ||
+						$page_title === "Ad Soyad" ||
+                        $page_title === "TC Okul" ||
+                        $page_title === "TC İşyeri"
+                    ) {
+                        echo 'style="color: white;"';
+                    }
+                    ?> href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Sorgular<i class="fas fa-chevron-right dropdown-icon"></i></a>
+                <ul>
+                    <li><a <?php if ($page_title === "Mernis 2022") echo 'style="color: #83d8ae !important;"' ?> href="/mernis2022"><i class="far fa-circle"></i>TC'den Kimlik</a></li>
+                    <li><a <?php if ($page_title === "TC GSM") echo 'style="color: #83d8ae !important;"' ?> href="/tcgsm"><i class="far fa-circle"></i>TC'den GSM</a></li>
+                    <li><a <?php if ($page_title === "TC Adres") echo 'style="color: #83d8ae !important;"' ?> href="/tcadres"><i class="far fa-circle"></i>TC'den Adres</a></li>
+                    <li><a <?php if ($page_title === "TC Okul") echo 'style="color: #83d8ae !important;"' ?> href="/tcokul"><i class="far fa-circle"></i>TC'den Okul</a></li>
+                    <li><a <?php if ($page_title === "TC İşyeri") echo 'style="color: #83d8ae !important;"' ?> href="/tcisyeri"><i class="far fa-circle"></i>TC'den İşyeri</a></li>
+                    <li><a <?php if ($page_title === "GSM TC") echo 'style="color: #83d8ae !important;"' ?> href="/gsmtc"><i class="far fa-circle"></i>GSM'den TC</a></li>
+                    <li><a <?php if ($page_title === "Mernis 2015") echo 'style="color: #83d8ae !important;"' ?> href="/mernis2015"><i class="far fa-circle"></i>Mernis 2015</a></li>
+                    <li><a <?php if ($page_title === "Facebook") echo 'style="color: #83d8ae !important;"' ?> href="/facebook"><i class="far fa-circle"></i>Facebook</a></li>
+					<li><a <?php if ($page_title === "A.Ö.L Sorgu") echo 'style="color: #83d8ae !important;"' ?> href="/aol"><i class="far fa-circle"></i>A.Ö.L Sorgu</a></li>
+					<li><a <?php if ($page_title === "Ad Soyad") echo 'style="color: #83d8ae !important;"' ?> href="/adsoyad"><i class="far fa-circle"></i>Ad Soyad Sorgu</a></li>
+                </ul>
+            </li>
+            <li <?php if ($page_title == 'Market') {
+                    echo 'class="active-page"';
+                } ?>>
+                <a href="/payload"><i data-feather="shopping-cart"></i>Market</a>
+            </li>
+            <?php if ($k_rol === "1") { ?>
+                <li <?php
+                    if ($page_title === "User Manager" ||
+                    $page_title === "User Settings" ||
+                    $page_title === "Notice Sharing" || 
+                    $page_title === "Duyuru Düzenle") {
+                        echo 'class="open"';
+                    }
+                    ?>>
+                    <a <?php
+                        if ($page_title === "User Manager" ||
+                        $page_title === "User Settings" ||
+                        $page_title === "Notice Sharing" || 
+                        $page_title === "Duyuru Düzenle") {
+                            echo 'style="color: white;"';
+                        }
+                        ?> href="/users"><i data-feather="lock"></i>Admin <i class="fas fa-chevron-right dropdown-icon"></i></a>
+                    <ul>
+                        <li>
+                            <a <?php
+                                if ($page_title === "User Manager" ||
+                                $page_title === "User Settings") {
+                                    echo 'style="color: #83d8ae !important;"';
+                                }
+                                ?> href="/users" class="active"><i class="far fa-circle"></i>Kullanıcılar</a>
+                        </li>
+                        <li>
+                            <a <?php
+                                if ($page_title === "Notice Sharing" || 
+                                $page_title === "Duyuru Düzenle") {
+                                    echo 'style="color: #83d8ae !important;"';
+                                }
+                                ?> href="/notice" class="active"><i class="far fa-circle"></i>Duyurular</a>
+                        </li>
+                    </ul>
+                </li>
+            <?php } ?>
+
+        </ul>
+    </div>
